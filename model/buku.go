@@ -3,10 +3,12 @@ package model
 import "gorm.io/gorm"
 
 type Buku struct {
-	ID          int    `gorm:"primaryKey, autoIncrement" json:"id" form:"id"`
-	Judul       string `gorm:"type:text" json:"judul" form:"judul"`
-	Penulis     string `gorm:"type:text" json:"penulis" form:"penulis"`
-	TahunTerbit int    `gorm:"type:int" json:"tahun_terbit" form:"tahun_terbit"`
+	ID          int          `gorm:"primaryKey, autoIncrement" json:"id" form:"id"`
+	Judul       string       `gorm:"type:text" json:"judul" form:"judul"`
+	Penulis     string       `gorm:"type:text" json:"penulis" form:"penulis"`
+	TahunTerbit int          `gorm:"type:int" json:"tahun_terbit" form:"tahun_terbit"`
+	CategoryID  int          `gorm:"type:int" json:"category_id" form:"category_id"`
+	Category    CategoryBuku `gorm:"foreignKey:CategoryID;references:ID" json:"category" form:"category"`
 }
 
 func CreateBuku(db *gorm.DB, buku Buku) error {

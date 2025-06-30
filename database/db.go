@@ -8,8 +8,15 @@ import (
 var DB *gorm.DB
 
 func DBConnenction() (*gorm.DB, error) {
-	user := "root"
-	pass := "mysql"
+
+	// user := "root"
+	// pass := "mysql"
+	// ip := "127.0.0.1"
+	// port := "3306"
+
+	//punya neva
+	user := "neva"
+	pass := "252525"
 	ip := "127.0.0.1"
 	port := "3306"
 	dbname := "db_ytl"

@@ -10,10 +10,12 @@ func AutoMigration() error {
 	if err != nil {
 		return err
 	}
-
+	// cara run migration
+	// go run main.go migrate
 	err = db.AutoMigrate(
 		// &model.Petugas{},
 		&model.Buku{},
+		&model.CategoryBuku{},
 	)
 	if err != nil {
 		return err
