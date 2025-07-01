@@ -61,11 +61,23 @@ func UpdateBuku(db *gorm.DB, id int, updated Buku) (Buku, error) {
 	if err := db.First(&buku, id).Error; err != nil {
 		return buku, err
 	}
-	buku.Judul = updated.Judul
-	buku.Penulis = updated.Penulis
-	buku.TahunTerbit = updated.TahunTerbit
-	buku.RakID = updated.RakID
-	buku.CategoryID = updated.CategoryID
+
+	if updated.Judul != "" {
+		buku.Judul = updated.Judul
+	}
+	if updated.Penulis != "" {
+		buku.Penulis = updated.Penulis
+	}
+	if updated.TahunTerbit != 0 {
+		buku.TahunTerbit = updated.TahunTerbit
+	}
+	if updated.RakID != 0 {
+		buku.RakID = updated.RakID
+	}
+	if updated.CategoryID != 0 {
+		buku.CategoryID = updated.CategoryID
+	}
+
 	err := db.Save(&buku).Error
 	return buku, err
 }

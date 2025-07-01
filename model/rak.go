@@ -28,7 +28,11 @@ func UpdateRak(db *gorm.DB, id int, updated Rak) (Rak, error) {
 	if err := db.First(&rak, id).Error; err != nil {
 		return rak, err
 	}
-	rak.Nama = updated.Nama
+
+	if updated.Nama != "" {
+		rak.Nama = updated.Nama
+	}
+
 	err := db.Save(&rak).Error
 	return rak, err
 }
