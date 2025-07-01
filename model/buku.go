@@ -9,6 +9,8 @@ type Buku struct {
 	TahunTerbit int          `gorm:"type:int" json:"tahun_terbit" form:"tahun_terbit"`
 	CategoryID  int          `gorm:"type:int" json:"category_id" form:"category_id"`
 	Category    CategoryBuku `gorm:"foreignKey:CategoryID;references:ID" json:"category" form:"category"`
+	RakID       int          `gorm:"not null"`
+	Rak         Rak          `gorm:"foreignKey=RakID"`
 }
 
 func CreateBuku(db *gorm.DB, buku Buku) error {
@@ -20,60 +22,64 @@ func CreateBuku(db *gorm.DB, buku Buku) error {
 
 }
 
-func ReadBuku(db *gorm.DB) ([]Buku, error) {
-	var buku []Buku
-	result := db.Model(&buku).Find(&buku)
-	if result.Error != nil {
-		return nil, result.Error
+func ReadBuku(db *gorm.DB) ([]BukuResponse, error) {
+	var bukuList []Buku
+	err := db.Preload("Rak").Find(&bukuList).Error
+	if err != nil {
+		return nil, err
 	}
-	return buku, nil
+
+	var response []BukuResponse
+	for _, b := range bukuList {
+		response = append(response, BukuResponse{
+			ID:          b.ID,
+			Judul:       b.Judul,
+			Penulis:     b.Penulis,
+			TahunTerbit: b.TahunTerbit,
+			RakID:       b.RakID,
+			RakNama:     b.Rak.Nama,
+		})
+	}
+
+	return response, nil
 }
 
-func UpdateBuku(db *gorm.DB, id int, buku Buku) (*Buku, error) {
-	var existingBuku Buku
-	result := db.First(&existingBuku, id)
-	if result.Error != nil {
-		return nil, result.Error
+func GetBukuById(db *gorm.DB, id int) (BukuResponse, error) {
+	var buku Buku
+	err := db.Preload("Rak").First(&buku, id).Error
+	if err != nil {
+		return BukuResponse{}, err
 	}
 
-	if buku.Judul != "" {
-		existingBuku.Judul = buku.Judul
-	}
-	if buku.Penulis != "" {
-		existingBuku.Penulis = buku.Penulis
-	}
-	if buku.TahunTerbit != 0 {
-		existingBuku.TahunTerbit = buku.TahunTerbit
+	response := BukuResponse{
+		ID:          buku.ID,
+		Judul:       buku.Judul,
+		Penulis:     buku.Penulis,
+		TahunTerbit: buku.TahunTerbit,
+		RakID:       buku.RakID,
+		RakNama:     buku.Rak.Nama,
 	}
 
-	result = db.Save(&existingBuku)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-	return &buku, nil
+	return response, nil
+}
 
+// func CreateBuku(db *gorm.DB, buku Buku) error {
+// 	return db.Create(&buku).Error
+// }
+
+func UpdateBuku(db *gorm.DB, id int, updated Buku) (Buku, error) {
+	var buku Buku
+	if err := db.First(&buku, id).Error; err != nil {
+		return buku, err
+	}
+	buku.Judul = updated.Judul
+	buku.Penulis = updated.Penulis
+	buku.TahunTerbit = updated.TahunTerbit
+	buku.RakID = updated.RakID
+	err := db.Save(&buku).Error
+	return buku, err
 }
 
 func DeleteBuku(db *gorm.DB, id int) error {
-	var buku Buku
-	result := db.First(&buku, id)
-	if result.Error != nil {
-		return result.Error
-	}
-
-	result = db.Delete(&buku)
-	if result.Error != nil {
-		return result.Error
-	}
-	return nil
-
-}
-
-func GetBukuById(db *gorm.DB, id int) (*Buku, error) {
-	var buku Buku
-	result := db.First(&buku, id)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-	return &buku, nil
+	return db.Delete(&Buku{}, id).Error
 }

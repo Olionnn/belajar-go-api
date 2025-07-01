@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 func GetAllPetugas(c *gin.Context) {
 
 	var petugas []model.Petugas
@@ -27,7 +26,6 @@ func GetAllPetugas(c *gin.Context) {
 	})
 
 }
-
 
 func CreatePetugas(c *gin.Context) {
 	var petugas model.Petugas
@@ -87,7 +85,6 @@ func UpdatePetugas(c *gin.Context) {
 	})
 
 }
-
 
 func DeletePetugas(c *gin.Context) {
 	id := c.Param("id")

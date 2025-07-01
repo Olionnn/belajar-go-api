@@ -21,6 +21,12 @@ func Route() *gin.Engine {
 	router.PUT("/buku/:id", controller.UpdateBuku)
 	router.DELETE("/buku/:id", controller.DeleteBuku)
 
+	router.GET("/rak", controller.GetAllRak)
+	router.GET("/rak/:id", controller.GetRakByID)
+	router.POST("/rak", controller.CreateRak)
+	router.PUT("/rak/:id", controller.UpdateRak)
+	router.DELETE("/rak/:id", controller.DeleteRak)
+
 	router.GET("/category_buku", controller.GetAllCategoryBuku)
 	router.GET("/category_buku/:id", controller.GetCategoryBukuByID)
 	router.POST("/category_buku", controller.CreateCategoryBuku)
