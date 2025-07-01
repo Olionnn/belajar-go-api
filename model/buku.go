@@ -9,8 +9,8 @@ type Buku struct {
 	TahunTerbit int          `gorm:"type:int" json:"tahun_terbit" form:"tahun_terbit"`
 	CategoryID  int          `gorm:"type:int" json:"category_id" form:"category_id"`
 	Category    CategoryBuku `gorm:"foreignKey:CategoryID;references:ID" json:"category" form:"category"`
-	RakID       int          `gorm:"not null" json:"rak_id" form:"rak_id"`
-	RakNama     Rak          `gorm:"foreignKey:RakID;references:ID" json:"rak_nama" form:"rak_nama"`
+	RakID       int          `json:"rak_id"`
+	Rak         Rak          `gorm:"foreignKey:RakID;references:ID"`
 }
 
 func CreateBuku(db *gorm.DB, buku Buku) error {
@@ -24,26 +24,11 @@ func CreateBuku(db *gorm.DB, buku Buku) error {
 
 func ReadBuku(db *gorm.DB) ([]Buku, error) {
 	var bukuList []Buku
-	err := db.Preload("Rak").Find(&bukuList).Error
+	err := db.Debug().Preload("Rak").Preload("Category").Find(&bukuList).Error
 	if err != nil {
 		return nil, err
 	}
-
-	var response []Buku
-	for _, b := range bukuList {
-		response = append(response, Buku{
-			ID:          b.ID,
-			Judul:       b.Judul,
-			Penulis:     b.Penulis,
-			TahunTerbit: b.TahunTerbit,
-			RakID:       b.RakID,
-			RakNama:     b.RakNama,
-			CategoryID:  b.CategoryID,
-			Category:    b.Category,
-		})
-	}
-
-	return response, nil
+	return bukuList, nil
 }
 
 func GetBukuById(db *gorm.DB, id int) (Buku, error) {
@@ -59,7 +44,7 @@ func GetBukuById(db *gorm.DB, id int) (Buku, error) {
 		Penulis:     buku.Penulis,
 		TahunTerbit: buku.TahunTerbit,
 		RakID:       buku.RakID,
-		RakNama:     buku.RakNama,
+		Rak:         buku.Rak,
 		CategoryID:  buku.CategoryID,
 		Category:    buku.Category,
 	}
