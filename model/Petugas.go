@@ -3,7 +3,7 @@ package model
 import "gorm.io/gorm"
 
 type Petugas struct {
-	Id    int    `gorm:"primaryKey, autoIncrement, not null" json:"id" form:"id"`
+	Id    int    `gorm:"primaryKey, autoIncrement" json:"id" form:"id"`
 	Nama  string `gorm:"type:text, not null" json:"nama" form:"nama"`
 	Jakel string `gorm:"type:text, not null" json:"jakel" form:"jakel"`
 }
