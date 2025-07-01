@@ -1,5 +1,7 @@
 package model
 
+import "gorm.io/gorm"
+
 type Peminjaman struct {
 	ID         int    `gorm:"primaryKey, autoIncrement" json:"id" form:"id"`
 	BukuID     int    `json:"buku_id" form:"buku_id"`
@@ -7,4 +9,70 @@ type Peminjaman struct {
 	Tanggal    string `json:"tanggal" form:"tanggal"`
 }
 
-//belum saya buat masi bingungW
+func CreatePeminjaman(db *gorm.DB, peminjaman Peminjaman) error {
+	result := db.Create(&peminjaman)
+	return result.Error
+}
+
+func ReadPeminjaman(db *gorm.DB) ([]Peminjaman, error) {
+	var peminjamanList []Peminjaman
+	err := db.Find(&peminjamanList).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return peminjamanList, nil
+}
+
+func GetPeminjamanById(db *gorm.DB, id int) (Peminjaman, error) {
+	var peminjaman Peminjaman
+	err := db.First(&peminjaman, id).Error
+	if err != nil {
+		return Peminjaman{}, err
+	}
+
+	return peminjaman, nil
+}
+
+func UpdatePeminjaman(db *gorm.DB, id int, peminjaman Peminjaman) (*Peminjaman, error) {
+	var existingPeminjaman Peminjaman
+	if result := db.First(&existingPeminjaman, id); result.Error != nil {
+		return nil, result.Error
+	}
+
+	if peminjaman.BukuID != 0 {
+		existingPeminjaman.BukuID = peminjaman.BukuID
+	}
+	if peminjaman.PeminjamID != 0 {
+		existingPeminjaman.PeminjamID = peminjaman.PeminjamID
+	}
+	if peminjaman.Tanggal != "" {
+		existingPeminjaman.Tanggal = peminjaman.Tanggal
+	}
+
+	if result := db.Save(&existingPeminjaman); result.Error != nil {
+		return nil, result.Error
+	}
+	return &existingPeminjaman, nil
+}
+
+func DeletePeminjaman(db *gorm.DB, id int) error {
+	var peminjaman Peminjaman
+	if result := db.First(&peminjaman, id); result.Error != nil {
+		return result.Error
+	}
+
+	if result := db.Delete(&peminjaman); result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+func GetPeminjamanByBukuID(db *gorm.DB, bukuID int) ([]Peminjaman, error) {
+	var peminjamanList []Peminjaman
+	err := db.Where("buku_id = ?", bukuID).Find(&peminjamanList).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return peminjamanList, nil
+}

@@ -3,8 +3,8 @@ package model
 import "gorm.io/gorm"
 
 type Rak struct {
-	Id   int    `gorm:"primaryKey;autoIncrement"`
-	Nama string `gorm:"type:varchar(100);not null"`
+	ID   int    `gorm:"primaryKey;autoIncrement" json:"id" form:"id"`
+	Nama string `gorm:"type:text" json:"nama" form:"nama"`
 }
 
 func ReadRak(db *gorm.DB) ([]Rak, error) {

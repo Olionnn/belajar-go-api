@@ -9,8 +9,8 @@ type Buku struct {
 	TahunTerbit int          `gorm:"type:int" json:"tahun_terbit" form:"tahun_terbit"`
 	CategoryID  int          `gorm:"type:int" json:"category_id" form:"category_id"`
 	Category    CategoryBuku `gorm:"foreignKey:CategoryID;references:ID" json:"category" form:"category"`
-	RakID       int          `gorm:"not null"`
-	Rak         Rak          `gorm:"foreignKey=RakID"`
+	RakID       int          `gorm:"not null" json:"rak_id" form:"rak_id"`
+	RakNama     Rak          `gorm:"foreignKey:RakID;references:ID" json:"rak_nama" form:"rak_nama"`
 }
 
 func CreateBuku(db *gorm.DB, buku Buku) error {
@@ -22,42 +22,46 @@ func CreateBuku(db *gorm.DB, buku Buku) error {
 
 }
 
-func ReadBuku(db *gorm.DB) ([]BukuResponse, error) {
+func ReadBuku(db *gorm.DB) ([]Buku, error) {
 	var bukuList []Buku
 	err := db.Preload("Rak").Find(&bukuList).Error
 	if err != nil {
 		return nil, err
 	}
 
-	var response []BukuResponse
+	var response []Buku
 	for _, b := range bukuList {
-		response = append(response, BukuResponse{
+		response = append(response, Buku{
 			ID:          b.ID,
 			Judul:       b.Judul,
 			Penulis:     b.Penulis,
 			TahunTerbit: b.TahunTerbit,
 			RakID:       b.RakID,
-			RakNama:     b.Rak.Nama,
+			RakNama:     b.RakNama,
+			CategoryID:  b.CategoryID,
+			Category:    b.Category,
 		})
 	}
 
 	return response, nil
 }
 
-func GetBukuById(db *gorm.DB, id int) (BukuResponse, error) {
+func GetBukuById(db *gorm.DB, id int) (Buku, error) {
 	var buku Buku
 	err := db.Preload("Rak").First(&buku, id).Error
 	if err != nil {
-		return BukuResponse{}, err
+		return Buku{}, err
 	}
 
-	response := BukuResponse{
+	response := Buku{
 		ID:          buku.ID,
 		Judul:       buku.Judul,
 		Penulis:     buku.Penulis,
 		TahunTerbit: buku.TahunTerbit,
 		RakID:       buku.RakID,
-		RakNama:     buku.Rak.Nama,
+		RakNama:     buku.RakNama,
+		CategoryID:  buku.CategoryID,
+		Category:    buku.Category,
 	}
 
 	return response, nil
@@ -76,6 +80,7 @@ func UpdateBuku(db *gorm.DB, id int, updated Buku) (Buku, error) {
 	buku.Penulis = updated.Penulis
 	buku.TahunTerbit = updated.TahunTerbit
 	buku.RakID = updated.RakID
+	buku.CategoryID = updated.CategoryID
 	err := db.Save(&buku).Error
 	return buku, err
 }

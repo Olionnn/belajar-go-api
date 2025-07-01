@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	//command migrate
 
 	if len(os.Args) > 1 && os.Args[1] == "migrate" {
 		err := migration.AutoMigration()
