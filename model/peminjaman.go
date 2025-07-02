@@ -3,15 +3,22 @@ package model
 import "gorm.io/gorm"
 
 type Peminjaman struct {
-	ID         int    `gorm:"primaryKey, autoIncrement" json:"id" form:"id"`
-	BukuID     int    `json:"buku_id" form:"buku_id"`
-	PeminjamID int    `json:"peminjam_id" form:"peminjam_id"`
-	Tanggal    string `json:"tanggal" form:"tanggal"`
+	ID     int  `gorm:"primaryKey, autoIncrement" json:"id" form:"id"`
+	BukuID int  `json:"buku_id" form:"buku_id"`
+	Buku   Buku `gorm:"foreignKey:BukuID;references:ID" json:"buku" form:"buku"`
+	// PeminjamID is the ID of the person borrowing the book
+	//jadi saya
+	PeminjamID   int    `json:"peminjam_id" form:"peminjam_id"`
+	NamaPeminjam string `gorm:"type:text, not null" json:"nama_peminjam" form:"nama_peminjam"`
+	Tanggal      string `json:"tanggal" form:"tanggal"`
 }
 
 func CreatePeminjaman(db *gorm.DB, peminjaman Peminjaman) error {
 	result := db.Create(&peminjaman)
-	return result.Error
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }
 
 func ReadPeminjaman(db *gorm.DB) ([]Peminjaman, error) {

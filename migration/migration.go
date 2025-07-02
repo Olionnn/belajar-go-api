@@ -17,6 +17,7 @@ func AutoMigration() error {
 		&model.Buku{},
 		&model.Rak{},
 		&model.CategoryBuku{},
+		&model.Peminjaman{},
 	)
 	if err != nil {
 		return err

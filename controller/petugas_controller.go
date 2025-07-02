@@ -64,6 +64,12 @@ func UpdatePetugas(c *gin.Context) {
 
 	var id = c.Param("id")
 	idConv, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"message": "Bad request, invalid ID",
+		})
+		return
+	}
 
 	petugas := model.Petugas{
 		Id:    idConv,

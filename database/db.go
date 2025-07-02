@@ -14,18 +14,18 @@ func DBConnenction() (*gorm.DB, error) {
 	// ip := "127.0.0.1"
 	// port := "3306"
 
-	//punya neva
-	// user := "neva"
-	// pass := "252525"
-	// ip := "127.0.0.1"
-	// port := "3306"
-	// dbname := "db_ytl"
-
-	user := "haydar"
+	// punya neva
+	user := "neva"
 	pass := "252525"
 	ip := "127.0.0.1"
 	port := "3306"
-	dbname := "belajarapi"
+	dbname := "db_ytl"
+
+	// user := "haydar"
+	// pass := "252525"
+	// ip := "127.0.0.1"
+	// port := "3306"
+	// dbname := "belajarapi"
 
 	dsn := user + ":" + pass + "@tcp(" + ip + ":" + port + ")/" + dbname + "?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})

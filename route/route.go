@@ -33,5 +33,11 @@ func Route() *gin.Engine {
 	router.PUT("/category_buku/:id", controller.UpdateCategoryBuku)
 	router.DELETE("/category_buku/:id", controller.DeleteCategoryBuku)
 
+	router.GET("/peminjaman", controller.GetAllPeminjaman)
+	router.GET("/peminjaman/:id", controller.GetPeminjamanById)
+	router.POST("/peminjaman", controller.CreatePeminjaman)
+	router.PUT("/peminjaman/:id", controller.UpdatePeminjaman)
+	router.DELETE("/peminjaman/:id", controller.DeletePeminjaman)
+
 	return router
 }

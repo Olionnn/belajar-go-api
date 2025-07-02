@@ -26,9 +26,9 @@ func main() {
 
 	route := route.Route()
 
-	// route.Run(":2222")
+	route.Run(":2222")
 
-	route.Run(":8888")
+	// route.Run(":8888")
 
 }
 
