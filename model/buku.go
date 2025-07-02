@@ -11,6 +11,7 @@ type Buku struct {
 	Category    CategoryBuku `gorm:"foreignKey:CategoryID;references:ID" json:"category" form:"category"`
 	RakID       int          `json:"rak_id"`
 	Rak         Rak          `gorm:"foreignKey:RakID;references:ID"`
+	Peminjaman  []Peminjaman `gorm:"foreignKey:BukuID;references:ID" json:"peminjaman" form:"peminjaman"`
 }
 
 func CreateBuku(db *gorm.DB, buku Buku) error {
@@ -24,7 +25,7 @@ func CreateBuku(db *gorm.DB, buku Buku) error {
 
 func ReadBuku(db *gorm.DB) ([]Buku, error) {
 	var bukuList []Buku
-	err := db.Debug().Preload("Rak").Preload("Category").Find(&bukuList).Error
+	err := db.Debug().Preload("Rak").Preload("Category").Preload("Peminjaman").Find(&bukuList).Error
 	if err != nil {
 		return nil, err
 	}
@@ -47,6 +48,7 @@ func GetBukuById(db *gorm.DB, id int) (Buku, error) {
 		Rak:         buku.Rak,
 		CategoryID:  buku.CategoryID,
 		Category:    buku.Category,
+		Peminjaman:  buku.Peminjaman,
 	}
 
 	return response, nil

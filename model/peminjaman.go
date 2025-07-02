@@ -7,10 +7,11 @@ type Peminjaman struct {
 	BukuID int  `json:"buku_id" form:"buku_id"`
 	Buku   Buku `gorm:"foreignKey:BukuID;references:ID" json:"buku" form:"buku"`
 	// PeminjamID is the ID of the person borrowing the book
-	//jadi saya
-	PeminjamID   int    `json:"peminjam_id" form:"peminjam_id"`
-	NamaPeminjam string `gorm:"type:text, not null" json:"nama_peminjam" form:"nama_peminjam"`
-	Tanggal      string `json:"tanggal" form:"tanggal"`
+	//jadi saya menggunakan PeminjamID untuk menyimpan ID peminjam
+	//apakah perlu buat file user
+	// PeminjamID    int    `json:"peminjam_id" form:"peminjam_id"`
+	NamaPeminjam  string `gorm:"type:text" json:"nama_peminjam" form:"nama_peminjam"`
+	TanggalPinjam string `json:"tanggal_pinjam" form:"tanggal_pinjam"`
 }
 
 func CreatePeminjaman(db *gorm.DB, peminjaman Peminjaman) error {
@@ -50,11 +51,11 @@ func UpdatePeminjaman(db *gorm.DB, id int, peminjaman Peminjaman) (*Peminjaman, 
 	if peminjaman.BukuID != 0 {
 		existingPeminjaman.BukuID = peminjaman.BukuID
 	}
-	if peminjaman.PeminjamID != 0 {
-		existingPeminjaman.PeminjamID = peminjaman.PeminjamID
-	}
-	if peminjaman.Tanggal != "" {
-		existingPeminjaman.Tanggal = peminjaman.Tanggal
+	// if peminjaman.PeminjamID != 0 {
+	// 	existingPeminjaman.PeminjamID = peminjaman.PeminjamID
+	// }
+	if peminjaman.TanggalPinjam != "" {
+		existingPeminjaman.TanggalPinjam = peminjaman.TanggalPinjam
 	}
 
 	if result := db.Save(&existingPeminjaman); result.Error != nil {
