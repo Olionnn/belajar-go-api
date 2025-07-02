@@ -3,9 +3,9 @@ package model
 import "gorm.io/gorm"
 
 type Peminjaman struct {
-	ID     int  `gorm:"primaryKey, autoIncrement" json:"id" form:"id"`
-	BukuID int  `json:"buku_id" form:"buku_id"`
-	Buku   Buku `gorm:"foreignKey:BukuID;references:ID" json:"buku" form:"buku"`
+	ID int `gorm:"primaryKey, autoIncrement" json:"id" form:"id"`
+	// BukuID int  `json:"buku_id" form:"buku_id"`
+	// Buku   Buku `gorm:"foreignKey:BukuID;references:ID" json:"buku" form:"buku"`
 	// PeminjamID is the ID of the person borrowing the book
 	//jadi saya menggunakan PeminjamID untuk menyimpan ID peminjam
 	//apakah perlu buat file user
@@ -48,9 +48,9 @@ func UpdatePeminjaman(db *gorm.DB, id int, peminjaman Peminjaman) (*Peminjaman, 
 		return nil, result.Error
 	}
 
-	if peminjaman.BukuID != 0 {
-		existingPeminjaman.BukuID = peminjaman.BukuID
-	}
+	// if peminjaman.BukuID != 0 {
+	// 	existingPeminjaman.BukuID = peminjaman.BukuID
+	// }
 	// if peminjaman.PeminjamID != 0 {
 	// 	existingPeminjaman.PeminjamID = peminjaman.PeminjamID
 	// }

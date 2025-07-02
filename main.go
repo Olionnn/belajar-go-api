@@ -9,6 +9,7 @@ import (
 
 func main() {
 	//command migrate
+	// go run main.go migrate
 
 	if len(os.Args) > 1 && os.Args[1] == "migrate" {
 		err := migration.AutoMigration()
